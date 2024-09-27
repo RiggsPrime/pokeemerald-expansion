@@ -653,9 +653,9 @@
 #define FLAG_HIDDEN_ITEM_ROUTE_105_BIG_PEARL                 (FLAG_HIDDEN_ITEMS_START + 0x6F)
 
 #define FLAG_UNUSED_0x264  0x264 // Unused Flag
-#define FLAG_UNUSED_0x265  0x265 // Unused Flag
-#define FLAG_UNUSED_0x266  0x266 // Unused Flag
-#define FLAG_UNUSED_0x267  0x267 // Unused Flag
+#define FLAG_UNUSED_0x265  0x265 // If this flag is set, wild encounters will be disabled.
+#define FLAG_UNUSED_0x266  0x266 // If this flag is set, trainers will not battle the player unless they're talked to.
+#define FLAG_UNUSED_0x267  0x267 // If this flag is set, the player will be able to walk over tiles with collision. Mainly intended for debugging purposes.
 #define FLAG_UNUSED_0x268  0x268 // Unused Flag
 #define FLAG_UNUSED_0x269  0x269 // Unused Flag
 #define FLAG_UNUSED_0x26A  0x26A // Unused Flag
