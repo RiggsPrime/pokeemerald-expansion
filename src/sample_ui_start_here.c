@@ -353,9 +353,9 @@ static const u32 sSampleUiTilemap[] = INCBIN_U32("graphics/sample_ui/tilemap.bin
  */
 static const u16 sSampleUiPalette[] = INCBIN_U16("graphics/sample_ui/00.gbapal");
 
-static const u32 sSampleUiGrassTiles[] = INCBIN_U32("graphics/sample_ui/viridian_forest_tiles.4bpp.lz");
-static const u32 sSampleUiGrassTilemap[] = INCBIN_U32("graphics/sample_ui/viridian_forest_tilemap.bin.lz");
-static const u16 sSampleUiGrassPalette[] = INCBIN_U16("graphics/sample_ui/viridian_forest.gbapal");
+static const u32 sSampleUiGrassTiles[] = INCBIN_U32("graphics/sample_ui/smw_bg_tiles.4bpp.lz");
+static const u32 sSampleUiGrassTilemap[] = INCBIN_U32("graphics/sample_ui/smw_bg_tilemap.bin.lz");
+static const u16 sSampleUiGrassPalette[] = INCBIN_U16("graphics/sample_ui/smw_bg.gbapal");
 
 
 
