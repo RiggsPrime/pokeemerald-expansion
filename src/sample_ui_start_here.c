@@ -156,6 +156,7 @@ enum WindowIds
  */
 static EWRAM_DATA struct SampleUiState *sSampleUiState = NULL;
 static EWRAM_DATA u8 *sBg1TilemapBuffer = NULL;
+static EWRAM_DATA u8 *sBg2TilemapBuffer = NULL;
 
 /*
  * Defines and read-only data for on-screen dex.
@@ -208,6 +209,13 @@ static const struct BgTemplate sSampleUiBgTemplates[] =
         .mapBaseIndex = 30,
         // Draw this BG below BG0, since we want text drawn on top of the menu graphics
         .priority = 2
+    },
+    // sample grass background test
+    {
+        .bg = 2,
+        .charBaseIndex = 2,
+        .mapBaseIndex = 29,
+        .priority = 3
     }
     /*
      * I encourage you to open the mGBA Tools/Game State Views/View Tiles menu to see how this above code gets
@@ -328,7 +336,7 @@ static const struct WindowTemplate sSampleUiWindowTemplates[] =
  * (you can technically get away with 8bpp indexing as long as each individual index is between 0-15). The easiest way
  * to make indexed PNGs is using a program like GraphicsGale or Aseprite (in Index mode).
  */
-static const u32 sSampleUiTiles[] = INCBIN_U32("graphics/sample_ui/tiles.4bpp.lz");
+static const u32 sSampleUiTiles[] = INCBIN_U32("graphics/sample_ui/tiles_transparent.4bpp.lz");
 
 /*
  * I created this tilemap in TilemapStudio using the above tile PNG. I highly recommend TilemapStudio for exporting maps
@@ -344,6 +352,12 @@ static const u32 sSampleUiTilemap[] = INCBIN_U32("graphics/sample_ui/tilemap.bin
  * problems.
  */
 static const u16 sSampleUiPalette[] = INCBIN_U16("graphics/sample_ui/00.gbapal");
+
+static const u32 sSampleUiGrassTiles[] = INCBIN_U32("graphics/sample_ui/viridian_forest_tiles.4bpp.lz");
+static const u32 sSampleUiGrassTilemap[] = INCBIN_U32("graphics/sample_ui/viridian_forest_tilemap.bin.lz");
+static const u16 sSampleUiGrassPalette[] = INCBIN_U16("graphics/sample_ui/viridian_forest.gbapal");
+
+
 
 // Define some font color values that will index into our font color table below.
 enum FontColor
@@ -723,14 +737,21 @@ static bool8 SampleUi_InitBgs(void)
      * For more info on tilemap entries and how they work:
      * https://www.coranac.com/tonc/text/regbg.htm#sec-map
      */
-    const u32 TILEMAP_BUFFER_SIZE = (1024 * 2);
+    const u32 TILEMAP_BUFFER_SIZE_BG1 = (1024 * 2);
+    const u32 TILEMAP_BUFFER_SIZE_BG2 = (1024 * 2);
 
     // BG registers may have scroll values left over from the previous screen. Reset all scroll values to 0.
     ResetAllBgsCoordinates();
 
     // Allocate our tilemap buffer on the heap
-    sBg1TilemapBuffer = AllocZeroed(TILEMAP_BUFFER_SIZE);
+    sBg1TilemapBuffer = AllocZeroed(TILEMAP_BUFFER_SIZE_BG1);
+    sBg2TilemapBuffer = AllocZeroed(TILEMAP_BUFFER_SIZE_BG2);
     if (sBg1TilemapBuffer == NULL)
+    {
+        // Bail if the allocation fails
+        return FALSE;
+    }
+    if (sBg2TilemapBuffer == NULL)
     {
         // Bail if the allocation fails
         return FALSE;
@@ -752,6 +773,7 @@ static bool8 SampleUi_InitBgs(void)
 
     // Set the BG manager to use our newly allocated tilemap buffer for BG1's tilemap
     SetBgTilemapBuffer(1, sBg1TilemapBuffer);
+    SetBgTilemapBuffer(2, sBg2TilemapBuffer);
 
     /*
      * Schedule to copy the tilemap buffer contents (remember we zeroed it out earlier) into VRAM on the next VBlank.
@@ -759,10 +781,12 @@ static bool8 SampleUi_InitBgs(void)
      * values from sSampleUiTilemap.
      */
     ScheduleBgCopyTilemapToVram(1);
+    ScheduleBgCopyTilemapToVram(2);
 
     // Set reg DISPCNT to show BG0, BG1. Try commenting these out to see what happens.
     ShowBg(0);
     ShowBg(1);
+    ShowBg(2);
 
     return TRUE;
 }
@@ -812,6 +836,7 @@ static bool8 SampleUi_LoadGraphics(void)
          * the `ResetTempTileDataBuffers' call above, since it doesn't use the temp tile data buffers.
          */
         DecompressAndCopyTileDataToVram(1, sSampleUiTiles, 0, 0, 0);
+        DecompressAndCopyTileDataToVram(2, sSampleUiGrassTiles, 0, 0, 0);
         sSampleUiState->loadState++;
         break;
     case 1:
@@ -830,6 +855,7 @@ static bool8 SampleUi_LoadGraphics(void)
              * (argument 2). In our case `dest' is just the tilemap buffer we heap-allocated earlier.
              */
             LZDecompressWram(sSampleUiTilemap, sBg1TilemapBuffer);
+            LZDecompressWram(sSampleUiGrassTilemap, sBg2TilemapBuffer);
             sSampleUiState->loadState++;
         }
         break;
@@ -839,6 +865,7 @@ static bool8 SampleUi_LoadGraphics(void)
          * into VRAM. That only happens during VBlank if the current callback specifies a buffer transfer.
          */
         LoadPalette(sSampleUiPalette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+        LoadPalette(sSampleUiGrassPalette, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         /*
          * Copy the message box palette into BG palette buffer, slot 15. Our window is set to use palette 15 and our
          * text color constants are defined assuming we are indexing into this palette.
@@ -1034,6 +1061,10 @@ static void SampleUi_FreeResources(void)
     if (sBg1TilemapBuffer != NULL)
     {
         Free(sBg1TilemapBuffer);
+    }
+    if (sBg2TilemapBuffer != NULL)
+    {
+        Free(sBg2TilemapBuffer);
     }
     // Free all allocated tilemap and pixel buffers associated with the windows.
     FreeAllWindowBuffers();
