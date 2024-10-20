@@ -353,9 +353,9 @@ static const u32 sSampleUiTilemap[] = INCBIN_U32("graphics/sample_ui/tilemap.bin
  */
 static const u16 sSampleUiPalette[] = INCBIN_U16("graphics/sample_ui/00.gbapal");
 
-static const u32 sSampleUiGrassTiles[] = INCBIN_U32("graphics/sample_ui/smw_bg_tiles.4bpp.lz");
-static const u32 sSampleUiGrassTilemap[] = INCBIN_U32("graphics/sample_ui/smw_bg_tilemap.bin.lz");
-static const u16 sSampleUiGrassPalette[] = INCBIN_U16("graphics/sample_ui/smw_bg.gbapal");
+static const u32 sSampleUiGrassTiles[] = INCBIN_U32("graphics/sample_ui/dougwalker_tiles.4bpp.lz");
+static const u32 sSampleUiGrassTilemap[] = INCBIN_U32("graphics/sample_ui/dougwalker_tilemap.bin.lz");
+static const u16 sSampleUiGrassPalette[] = INCBIN_U16("graphics/sample_ui/dougwalker.gbapal");
 
 
 
@@ -622,6 +622,8 @@ static void SampleUi_VBlankCB(void)
     ProcessSpriteCopyRequests();
     // Transfer the processed palette buffer into VRAM palette area
     TransferPlttBuffer();
+    ChangeBgX(2, 64, BG_COORD_ADD);
+    ChangeBgY(2, 64, BG_COORD_ADD);
 }
 
 static void Task_SampleUiWaitFadeIn(u8 taskId)
