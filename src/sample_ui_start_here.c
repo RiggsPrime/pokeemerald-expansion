@@ -994,12 +994,42 @@ static void SampleUi_PrintUiButtonHints(void)
     CopyWindowToVram(WIN_UI_HINTS, COPYWIN_GFX);
 }
 
+void GetBaseStatText(u16 stat, const u8 *text)
+{
+    ConvertIntToDecimalStringN(gStringVar1, stat, STR_CONV_MODE_LEADING_ZEROS, 3);
+    StringExpandPlaceholders(gStringVar2, text);
+}
+
+void GetAbilityText(u16 ability, const u8 *text)
+{
+    StringCopy(gStringVar1, GetAbilityName(ability));
+    StringExpandPlaceholders(gStringVar2, text);
+}
+
 static const u8 sText_SampleUiMonInfoSpecies[] = _("{NO}{STR_VAR_1} {STR_VAR_2}");
-static const u8 sText_SampleUiMonStats[] = _("Put stats info here");
+static const u8 sText_SampleUiMonStatsHP[] = _("HP:            {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsAttack[] = _("ATK:          {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsDefense[] = _("DEF:          {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsSpAtk[] = _("SPATK:      {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsSpDef[] = _("SPDEF:      {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsSpeed[] = _("SPEED:      {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsAbility0[] = _("ABILITY 1:      {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsAbility1[] = _("ABILITY 2:      {STR_VAR_1}");
+static const u8 sText_SampleUiMonStatsAbility2[] = _("H. ABILITY:     {STR_VAR_1}");
 static const u8 sText_SampleUiMonOther[] = _("Put other info here");
 static void SampleUi_PrintUiMonInfo(void)
 {
     u16 speciesId = NationalPokedexNumToSpecies(sSampleUiState->monIconDexNum);
+    u8 baseHP =  gSpeciesInfo[speciesId].baseHP;
+    u8 baseAtk =  gSpeciesInfo[speciesId].baseAttack;
+    u8 baseDef = gSpeciesInfo[speciesId].baseDefense;
+    u8 baseSpAtk = gSpeciesInfo[speciesId].baseSpAttack;
+    u8 baseSpDef = gSpeciesInfo[speciesId].baseSpDefense;
+    u8 baseSpeed = gSpeciesInfo[speciesId].baseSpeed;
+    u16 ability0 = gSpeciesInfo[speciesId].abilities[0];
+    u16 ability1 = gSpeciesInfo[speciesId].abilities[1];
+    u16 ability2 = gSpeciesInfo[speciesId].abilities[2];
+
 
     // Clear the window before drawing new text
     FillWindowPixelBuffer(WIN_MON_INFO, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
@@ -1022,12 +1052,37 @@ static void SampleUi_PrintUiMonInfo(void)
             TEXT_SKIP_DRAW, gStringVar4);
         break;
     case MODE_STATS:
+        GetBaseStatText(baseHP, sText_SampleUiMonStatsHP);
         AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 3, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
-            TEXT_SKIP_DRAW, sText_SampleUiMonStats);
+            TEXT_SKIP_DRAW, gStringVar2);
+        GetBaseStatText(baseAtk, sText_SampleUiMonStatsAttack);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 15, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
+        GetBaseStatText(baseDef, sText_SampleUiMonStatsDefense);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 27, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
+        GetBaseStatText(baseSpAtk, sText_SampleUiMonStatsSpAtk);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 39, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
+        GetBaseStatText(baseSpDef, sText_SampleUiMonStatsSpDef);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 51, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
+        GetBaseStatText(baseSpeed, sText_SampleUiMonStatsSpeed);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 63, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
         break;
     case MODE_OTHER:
+        GetAbilityText(ability0, sText_SampleUiMonStatsAbility0);
         AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 3, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
-            TEXT_SKIP_DRAW, sText_SampleUiMonOther);
+            TEXT_SKIP_DRAW, gStringVar2);
+
+        GetAbilityText(ability1, sText_SampleUiMonStatsAbility1);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 15, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
+
+        GetAbilityText(ability2, sText_SampleUiMonStatsAbility2);
+        AddTextPrinterParameterized4(WIN_MON_INFO, FONT_SHORT, 5, 27, 0, 0, sSampleUiWindowFontColors[FONT_BLACK],
+            TEXT_SKIP_DRAW, gStringVar2);
         break;
     default:
         break;

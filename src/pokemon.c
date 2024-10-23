@@ -3291,6 +3291,11 @@ const u8 *GetSpeciesName(u16 species)
     return gSpeciesInfo[species].speciesName;
 }
 
+const u8 *GetAbilityName(u16 ability)
+{
+    return gAbilitiesInfo[ability].name;
+}
+
 const u8 *GetSpeciesCategory(u16 species)
 {
     species = SanitizeSpeciesId(species);

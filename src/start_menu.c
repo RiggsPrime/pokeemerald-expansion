@@ -1498,6 +1498,6 @@ void AppendToList(u8 *list, u8 *pos, u8 newEntry)
 static bool8 StartMenuSampleUiCallback(void)
 {
     // Change which version of the UI is launched by changing which task is called from here
-    CreateTask(Task_OpenSampleUi_SlidingPanel, 0);
+    CreateTask(Task_OpenSampleUi_StartHere, 0);
     return TRUE;
 }

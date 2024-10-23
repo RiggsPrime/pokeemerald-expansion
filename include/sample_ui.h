@@ -4,6 +4,9 @@
 #include "gba/types.h"
 #include "main.h"
 
+void GetBaseStatText(u16 stat, const u8 *text);
+void GetAbilityText(u16 stat, const u8 *text);
+
 /*
  * Entry tasks for the different versions of the UI. In `start_menu.c', we'll launch a task using one of
  * these functions. You can change which is used to change which menu is launched.
