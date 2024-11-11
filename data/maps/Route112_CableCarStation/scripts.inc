@@ -53,6 +53,13 @@ Route112_CableCarStation_EventScript_RideCableCar::
 	release
 	end
 
+Route112_CableCarStation_Technical_Difficulties_EventScript_Test::
+	lock
+	special TechDiff
+	waitstate
+	release
+	end
+
 Route112_CableCarStation_EventScript_DeclineRide::
 	msgbox Route112_CableCarStation_Text_RideAnotherTime, MSGBOX_DEFAULT
 	release
