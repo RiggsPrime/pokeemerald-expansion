@@ -142,6 +142,9 @@ Debug_EventScript_Script_1::
 	end
 
 Debug_EventScript_Script_2::
+	special CableCar
+	waitstate
+	release
 	end
 
 Debug_EventScript_Script_3::
